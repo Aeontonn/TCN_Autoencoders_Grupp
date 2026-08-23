@@ -56,6 +56,9 @@ if __name__ == "__main__":
     model = keras.models.load_model(MODEL_PATH)
     x_test_reconstructed = model.predict(x_test_noisy)
 
+    print(f"RMSE (noisy vs clean): {rmse(x_test, x_test_noisy):.4f}")
+    print(f"PSNR (noisy vs clean): {psnr(x_test, x_test_noisy):.2f} dB")
+
     print(f"RMSE (denoised vs clean): {rmse(x_test, x_test_reconstructed):.4f}")
     print(f"PSNR (denoised vs clean): {psnr(x_test, x_test_reconstructed):.2f} dB")
 
