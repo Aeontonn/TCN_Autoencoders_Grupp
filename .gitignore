@@ -1,0 +1,8 @@
+data/*
+!data/.gitkeep
+*.h5
+*.keras
+__pycache__/
+.ipynb_checkpoints/
+.venv/
+venv/
