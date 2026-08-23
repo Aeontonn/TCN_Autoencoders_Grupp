@@ -64,10 +64,33 @@ if __name__ == "__main__":
 
     noise_levels = [0.15, 0.30, 0.50, 0.80]
 
+    rmse_results = []
+    psnr_results = []
+
     for noise_factor in noise_levels:
         noisy = add_noise(x_test, noise_factor=noise_factor)
         reconstructed = model.predict(noisy, verbose=0)
+
+        rmse_results.append(rmse(x_test, reconstructed))
+        psnr_results.append(psnr(x_test, reconstructed))
+
         print(f"Noise {noise_factor:.2f} - RMSE: {rmse(x_test, reconstructed):.4f}")
         print(f"Noise {noise_factor:.2f} - PSNR: {psnr(x_test, reconstructed):.2f} dB")
-        
+
+    import matplotlib.pyplot as plt
+
+    plt.plot(noise_levels, rmse_results, marker="o")
+    plt.xlabel("Noise level")
+    plt.ylabel("RMSE")
+    plt.title("RMSE vs noise level")
+    plt.savefig(REPORTS_DIR / "noise_rmse.png")
+    plt.close()
+
+    plt.plot(noise_levels, psnr_results, marker="o")
+    plt.xlabel("Noise level")
+    plt.ylabel("PSNR")
+    plt.title("PSNR vs noise level")
+    plt.savefig(REPORTS_DIR / "noise_psnr.png")
+    plt.close()
+
     plot_examples(x_test_noisy, x_test, x_test_reconstructed, y_test)
