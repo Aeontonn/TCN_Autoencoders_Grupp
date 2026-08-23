@@ -5,6 +5,10 @@ judged by how close the reconstruction is to the clean original, both
 numerically (RMSE/PSNR) and visually.
 """
 
+from bleach import clean
+from matplotlib import axes
+from narwhals import col
+from pyparsing import col
 import numpy as np
 from tensorflow import keras
 
@@ -34,10 +38,10 @@ def plot_examples(noisy, clean, reconstructed, labels, n: int = 8):
     fig, axes = plt.subplots(3, n, figsize=(2 * n, 6))
 
     for col, i in enumerate(idx):
-        axes[0, col].imshow(noisy[i].squeeze(), cmap="gray")
+        axes[0, col].imshow(noisy[i].squeeze(), cmap="gray", interpolation="nearest")
         axes[0, col].set_title(CLASS_NAMES[labels[i]], fontsize=8)
-        axes[1, col].imshow(reconstructed[i].squeeze(), cmap="gray")
-        axes[2, col].imshow(clean[i].squeeze(), cmap="gray")
+        axes[1, col].imshow(reconstructed[i].squeeze(), cmap="gray", interpolation="nearest")
+        axes[2, col].imshow(clean[i].squeeze(), cmap="gray", interpolation="nearest")
         for row in range(3):
             axes[row, col].axis("off")
 
