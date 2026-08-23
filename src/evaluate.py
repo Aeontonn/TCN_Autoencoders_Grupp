@@ -8,7 +8,7 @@ numerically (RMSE/PSNR) and visually.
 import numpy as np
 from tensorflow import keras
 
-from data_prep import CLASS_NAMES, prepare
+from data_prep import CLASS_NAMES, prepare, add_noise
 from train import MODEL_PATH, REPORTS_DIR
 
 RECONSTRUCTIONS_PLOT_PATH = REPORTS_DIR / "denoising_examples.png"
@@ -62,4 +62,12 @@ if __name__ == "__main__":
     print(f"RMSE (denoised vs clean): {rmse(x_test, x_test_reconstructed):.4f}")
     print(f"PSNR (denoised vs clean): {psnr(x_test, x_test_reconstructed):.2f} dB")
 
+    noise_levels = [0.15, 0.30, 0.50, 0.80]
+
+    for noise_factor in noise_levels:
+        noisy = add_noise(x_test, noise_factor=noise_factor)
+        reconstructed = model.predict(noisy, verbose=0)
+        print(f"Noise {noise_factor:.2f} - RMSE: {rmse(x_test, reconstructed):.4f}")
+        print(f"Noise {noise_factor:.2f} - PSNR: {psnr(x_test, reconstructed):.2f} dB")
+        
     plot_examples(x_test_noisy, x_test, x_test_reconstructed, y_test)
