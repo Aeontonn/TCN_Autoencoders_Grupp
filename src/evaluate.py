@@ -8,7 +8,7 @@ numerically (RMSE/PSNR) and visually.
 import numpy as np
 from tensorflow import keras
 
-from data_prep import CLASS_NAMES, prepare
+from data_prep import CLASS_NAMES, prepare, add_noise
 from train import MODEL_PATH, REPORTS_DIR
 
 RECONSTRUCTIONS_PLOT_PATH = REPORTS_DIR / "denoising_examples.png"
@@ -56,7 +56,41 @@ if __name__ == "__main__":
     model = keras.models.load_model(MODEL_PATH)
     x_test_reconstructed = model.predict(x_test_noisy)
 
+    print(f"RMSE (noisy vs clean): {rmse(x_test, x_test_noisy):.4f}")
+    print(f"PSNR (noisy vs clean): {psnr(x_test, x_test_noisy):.2f} dB")
+
     print(f"RMSE (denoised vs clean): {rmse(x_test, x_test_reconstructed):.4f}")
     print(f"PSNR (denoised vs clean): {psnr(x_test, x_test_reconstructed):.2f} dB")
+
+    noise_levels = [0.15, 0.30, 0.50, 0.80]
+
+    rmse_results = []
+    psnr_results = []
+
+    for noise_factor in noise_levels:
+        noisy = add_noise(x_test, noise_factor=noise_factor)
+        reconstructed = model.predict(noisy, verbose=0)
+
+        rmse_results.append(rmse(x_test, reconstructed))
+        psnr_results.append(psnr(x_test, reconstructed))
+
+        print(f"Noise {noise_factor:.2f} - RMSE: {rmse(x_test, reconstructed):.4f}")
+        print(f"Noise {noise_factor:.2f} - PSNR: {psnr(x_test, reconstructed):.2f} dB")
+
+    import matplotlib.pyplot as plt
+
+    plt.plot(noise_levels, rmse_results, marker="o")
+    plt.xlabel("Noise level")
+    plt.ylabel("RMSE")
+    plt.title("RMSE vs noise level")
+    plt.savefig(REPORTS_DIR / "noise_rmse.png")
+    plt.close()
+
+    plt.plot(noise_levels, psnr_results, marker="o")
+    plt.xlabel("Noise level")
+    plt.ylabel("PSNR")
+    plt.title("PSNR vs noise level")
+    plt.savefig(REPORTS_DIR / "noise_psnr.png")
+    plt.close()
 
     plot_examples(x_test_noisy, x_test, x_test_reconstructed, y_test)
