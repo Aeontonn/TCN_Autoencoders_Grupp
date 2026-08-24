@@ -53,6 +53,8 @@ def prepare(val_fraction: float = 0.1):
     x_val, x_train = x_train_full[:n_val], x_train_full[n_val:]
     y_val, y_train = y_train_full[:n_val], y_train_full[n_val:]
 
+    # Vi använder samma rng för alla tre delar (train/val/test), så att de
+    # inte får exakt likadant brus, men resultatet blir ändå samma varje gång.
     rng = np.random.default_rng(RANDOM_STATE)
     x_train_noisy = add_noise(x_train, rng=rng)
     x_val_noisy = add_noise(x_val, rng=rng)

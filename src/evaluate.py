@@ -5,10 +5,6 @@ judged by how close the reconstruction is to the clean original, both
 numerically (RMSE/PSNR) and visually.
 """
 
-from bleach import clean
-from matplotlib import axes
-from narwhals import col
-from pyparsing import col
 import numpy as np
 from tensorflow import keras
 
@@ -72,6 +68,8 @@ if __name__ == "__main__":
     psnr_results = []
 
     for noise_factor in noise_levels:
+        # add_noise() använder samma seed varje gång den anropas här, så
+        # bruset blir samma mönster för varje nivå, bara starkare/svagare.
         noisy = add_noise(x_test, noise_factor=noise_factor)
         reconstructed = model.predict(noisy, verbose=0)
 
