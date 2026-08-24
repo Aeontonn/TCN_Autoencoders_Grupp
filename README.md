@@ -1,8 +1,6 @@
 # TCN_Autoencoders_Grupp
 Grupp projekt i TCN/ Autoencoders
 
-Se [PROJECT_PLAN.md](PROJECT_PLAN.md) för projektbas, rollfördelning och tidsplan.
-
 **Valt spår:** Autoencoders — denoising på Fashion-MNIST (brusiga klädbilder → rena bilder).
 Inget dataset behöver laddas ner manuellt, Keras hämtar och cachar det automatiskt.
 
